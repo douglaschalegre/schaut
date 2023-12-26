@@ -29,7 +29,7 @@ def convert_to_ts_interface(schema: Schema) -> list:
 def write_ts_interface(interface: list, name: str) -> None:
     '''Writes a typescript interface to a file'''
     file_path = os.path.join('ts-interfaces', f'{name}.ts')
-    print(file_path)
+
     with open(file_path, 'w', encoding='utf-8') as file:
         for line in interface:
             file.write(f'{line}\n')

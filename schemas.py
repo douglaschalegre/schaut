@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 class OpenApiProprety():
     '''Schema for openapi properties'''
     name: str
-    type: str
+    type: str | None = field(default=None)
     format: str | None = field(default=None)
     items: dict | None = field(default=None)
 
@@ -15,8 +15,8 @@ class OpenApiProprety():
 class Proprety():
     '''Schema for properties'''
     required: bool
-    name: str
     type: str
+    name: str | None = field(default=None)
     format: str | None = field(default=None)
     items: dict | None = field(default=None)
 

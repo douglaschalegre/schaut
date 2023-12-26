@@ -22,11 +22,33 @@ def get_schemas(response: requests.Response) -> list[OpenApiSchema]:
     if not schemas:
         raise ValueError('No schemas found in OpenAPI data')
 
+    schemas_list: list[OpenApiSchema] = []
     for schema in schemas:
-        schemas[schema] = OpenApiSchema(**schemas[schema])
-        print(type(schemas[schema]))
+        properties = []
+        if 'properties' in schemas[schema]:
+            for proprety in schemas[schema]['properties']:
+                properties.append(
+                    OpenApiProprety(
+                        name=proprety,
+                        type=schemas[schema]['properties'][proprety]['type'] if 'type' in schemas[schema]['properties'][proprety] else None,
+                        format=schemas[schema]['properties'][proprety]['format'] if 'format' in schemas[schema]['properties'][proprety] else None,
+                        items=schemas[schema]['properties'][proprety]['items'] if 'items' in schemas[schema]['properties'][proprety] else None,
+                    )
+                )
+        schemas_list.append(
+            OpenApiSchema(
+                title=schemas[schema]['title'],
+                type=schemas[schema]['type'],
+                description=schemas[schema]['description'] if 'description' in schemas[schema] else None,
+                required=schemas[schema]['required'] if 'required' in schemas[schema] else None,
+                properties=properties if properties else None,
+                examples=schemas[schema]['examples'] if 'examples' in schemas[schema] else None,
+                enum=schemas[schema]['enum'] if 'enum' in schemas[schema] else None,
+                items=schemas[schema]['items'] if 'items' in schemas[schema] else None
+            )
+        )
 
-    return schemas
+    return schemas_list
 
 
 def get_schemas_names(schemas: dict) -> list[str]:
@@ -41,16 +63,15 @@ def get_schemas_names(schemas: dict) -> list[str]:
 
 def get_schema_properties(schema: OpenApiSchema) -> list[OpenApiProprety]:
     '''Get schema properties from OpenAPI data'''
-    print(schema)
     properties = schema.properties
 
     if not properties:
-        raise ValueError('No properties found in OpenAPI data')
+        return []
 
     return properties
 
 
-def get_required_properties(schema: OpenApiSchema) -> list:
+def get_required_properties(schema: OpenApiSchema) -> list[str]:
     '''Get schema required fields from OpenAPI data'''
     required = schema.required
 
