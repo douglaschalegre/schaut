@@ -15,7 +15,7 @@ class OpenApiProprety():
 class Proprety():
     '''Schema for properties'''
     required: bool
-    type: str
+    type: str | None = field(default=None)
     name: str | None = field(default=None)
     format: str | None = field(default=None)
     items: dict | None = field(default=None)
