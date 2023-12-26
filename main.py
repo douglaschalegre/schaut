@@ -6,21 +6,19 @@ import to_typescript
 schemas = openapi.get_schemas(openapi.request_openapi_data(
     'https://dev.subweb.com.br/tool/workflow/api'))
 
-
+to_typescript.ts_mkdir()
 for schema in schemas:
     schema_properties = openapi.get_schema_properties(schema)
     schema_required_properties = openapi.get_required_properties(schema)
 
     propreties = []
-    for proprety in schema_properties:
-        object = proprety
-
+    for prop in schema_properties:
         propreties.append(Proprety(
-            required=proprety.name in schema_required_properties if proprety.name else False,
-            type=proprety.type if proprety.type else None,
-            name=proprety.name if proprety.name else None,
-            format=proprety.format if proprety.format else None,
-            items=proprety.items if proprety.items else None
+            required=prop.name in schema_required_properties if prop.name else False,
+            type=prop.type if prop.type else None,
+            name=prop.name if prop.name else None,
+            format=prop.format if prop.format else None,
+            items=prop.items if prop.items else None
         ))
 
     schema_class = Schema(name=schema.title, properties=propreties)
