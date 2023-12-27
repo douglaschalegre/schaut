@@ -54,8 +54,9 @@ def write_ts_interface(interface: list, name: str) -> None:
 
 def update_interface_with_refs(name: str, props_with_refs: list[Property]) -> list[str]:
     '''Updates the interface with the references of other interfaces'''
+    number_of_imports = 0
+    new_interface = []
     with open(f'ts-interfaces/{name}.ts', 'r', encoding='utf-8') as file:
-        new_interface = []
         for line in file:
             line_without_new_line = line.replace('\n', '')
             for prop in props_with_refs:
@@ -69,8 +70,10 @@ def update_interface_with_refs(name: str, props_with_refs: list[Property]) -> li
                     if ref != '':
                         new_interface.insert(
                             0, f'import {{ {import_name} }} from \'./{import_name}\';')
+                        number_of_imports += 1
             new_interface.append(line_without_new_line)
-    print(new_interface)
+
+    new_interface.insert(number_of_imports, '')
     return new_interface
 
 
