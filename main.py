@@ -13,12 +13,9 @@ for schema in schemas:
 
     propreties = []
     for prop in schema_properties:
-        propreties.append(Proprety(
-            required=prop.name in schema_required_properties if prop.name else False,
-            type=prop.type if prop.type else None,
-            name=prop.name if prop.name else None,
-            format=prop.format if prop.format else None,
-            items=prop.items if prop.items else None
+        propreties.append(Proprety.from_openapi_proprety(
+            prop=prop,
+            required=prop.name in schema_required_properties if prop.name else False
         ))
 
     schema_class = Schema(name=schema.title, properties=propreties)

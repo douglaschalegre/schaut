@@ -31,6 +31,17 @@ class Proprety():
     format: str | None = field(default=None)
     items: dict | None = field(default=None)
 
+    @staticmethod
+    def from_openapi_proprety(prop: OpenApiProprety, required: bool) -> Proprety:
+        '''Create a Proprety from OpenApiProprety'''
+        return Proprety(
+            required=required,
+            type=prop.type,
+            name=prop.name,
+            format=prop.format,
+            items=prop.items
+        )
+
 
 @dataclass
 class Schema():
