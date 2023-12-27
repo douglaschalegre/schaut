@@ -34,15 +34,44 @@ def interface_line(prop: Property) -> str | None:
     if prop.type is None:
         return None
     symbol = '?' if not prop.required else ''
-    return f'    {prop.name}{symbol}: {OPEN_API_TYPES_IN_TS[prop.type]};'
+    return f'  {prop.name}{symbol}: {OPEN_API_TYPES_IN_TS[prop.type]};'
+
+
+def interface_line_with_ref(ref: str, line: str, import_name: str) -> str:
+    '''Converts an existing line into a line with a reference to another interface'''
+    if '[]' in line:
+        return line.replace('[]', f'{import_name}[]')
+    return line.replace('{}', ref)
 
 
 def write_ts_interface(interface: list, name: str) -> None:
-    '''Writes a typescript interface to a file'''
+    '''Writes a TypeScript interface to a file'''
     file_path = os.path.join('ts-interfaces', f'{name}.ts')
     with open(file_path, 'w', encoding='utf-8') as file:
         for line in interface:
             file.write(f'{line}\n')
+
+
+def update_interface_with_refs(name: str, props_with_refs: list[Property]) -> list[str]:
+    '''Updates the interface with the references of other interfaces'''
+    with open(f'ts-interfaces/{name}.ts', 'r', encoding='utf-8') as file:
+        new_interface = []
+        for line in file:
+            line_without_new_line = line.replace('\n', '')
+            for prop in props_with_refs:
+                if prop.name is not None and prop.name in line_without_new_line:
+                    ref = prop.items.get(
+                        '$ref', '') if prop.items is not None else ''
+                    import_name = ref.split("/")[-1]
+                    new_line = interface_line_with_ref(
+                        ref=ref, line=line_without_new_line, import_name=import_name)
+                    line_without_new_line = new_line
+                    if ref != '':
+                        new_interface.insert(
+                            0, f'import {{ {import_name} }} from \'./{import_name}\';')
+            new_interface.append(line_without_new_line)
+    print(new_interface)
+    return new_interface
 
 
 def ts_mkdir() -> None:
