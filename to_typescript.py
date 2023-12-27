@@ -1,6 +1,6 @@
 '''Handles the conversion of a json to a typescript type'''
 import os
-from schemas import Schema, Proprety
+from schemas import Schema, Property
 
 OPEN_API_TYPES_IN_TS = {
     'string': 'string',
@@ -29,7 +29,7 @@ def convert_to_ts_interface(schema: Schema) -> list:
     return interface
 
 
-def interface_line(prop: Proprety) -> str | None:
+def interface_line(prop: Property) -> str | None:
     '''Converts a prop to a typescript line'''
     if prop.type is None:
         return None

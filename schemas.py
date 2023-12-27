@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class OpenApiProprety():
+class OpenApiProperty():
     '''Schema for openapi properties'''
     name: str
     type: str | None = field(default=None)
@@ -12,9 +12,9 @@ class OpenApiProprety():
     items: dict | None = field(default=None)
 
     @staticmethod
-    def from_request_data(data: dict, name: str) -> OpenApiProprety:
-        '''Create a OpenApiProprety from request data'''
-        return OpenApiProprety(
+    def from_request_data(data: dict, name: str) -> OpenApiProperty:
+        '''Create a OpenApiProperty from request data'''
+        return OpenApiProperty(
             name=name,
             type=data['type'] if 'type' in data else None,
             format=data['format'] if 'format' in data else None,
@@ -23,7 +23,7 @@ class OpenApiProprety():
 
 
 @dataclass
-class Proprety():
+class Property():
     '''Schema for properties'''
     required: bool
     type: str | None = field(default=None)
@@ -32,9 +32,9 @@ class Proprety():
     items: dict | None = field(default=None)
 
     @staticmethod
-    def from_openapi_proprety(prop: OpenApiProprety, required: bool) -> Proprety:
-        '''Create a Proprety from OpenApiProprety'''
-        return Proprety(
+    def from_openapi_proprety(prop: OpenApiProperty, required: bool) -> Property:
+        '''Create a Property from OpenApiProperty'''
+        return Property(
             required=required,
             type=prop.type,
             name=prop.name,
@@ -47,7 +47,7 @@ class Proprety():
 class Schema():
     '''Schema for schemas'''
     name: str
-    properties: list[Proprety]
+    properties: list[Property]
 
 
 @dataclass
@@ -57,7 +57,7 @@ class OpenApiSchema():
     type: str
     description: str | None = field(default=None)
     required: list[str] | None = field(default=None)
-    properties: list[OpenApiProprety] | None = field(default=None)
+    properties: list[OpenApiProperty] | None = field(default=None)
     examples: list | None = field(default=None)
     enum: list | None = field(default=None)
     items: dict | None = field(default=None)
@@ -65,7 +65,7 @@ class OpenApiSchema():
     @staticmethod
     def from_request_data(data: dict,
                           name: str,
-                          properties: list[OpenApiProprety] | None) -> OpenApiSchema:
+                          properties: list[OpenApiProperty] | None) -> OpenApiSchema:
         '''Create a OpenApiSchema from request data'''
         return OpenApiSchema(
             title=name,

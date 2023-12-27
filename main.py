@@ -1,6 +1,6 @@
 '''Transforming OPENAPI Schemas to Interfaces'''
 import openapi
-from schemas import Proprety, Schema
+from schemas import Property, Schema
 import to_typescript
 
 schemas = openapi.get_schemas(openapi.request_openapi_data(
@@ -13,7 +13,7 @@ for schema in schemas:
 
     propreties = []
     for prop in schema_properties:
-        propreties.append(Proprety.from_openapi_proprety(
+        propreties.append(Property.from_openapi_proprety(
             prop=prop,
             required=prop.name in schema_required_properties if prop.name else False
         ))

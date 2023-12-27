@@ -1,6 +1,6 @@
 '''Handling OpenAPI data'''
 import requests
-from schemas import OpenApiProprety, OpenApiSchema
+from schemas import OpenApiProperty, OpenApiSchema
 
 
 def request_openapi_data(url: str) -> requests.Response:
@@ -33,7 +33,7 @@ def get_schemas(response: requests.Response) -> list[OpenApiSchema]:
         if 'properties' in schemas[schema]:
             for prop in schemas[schema]['properties']:
                 properties.append(
-                    OpenApiProprety.from_request_data(
+                    OpenApiProperty.from_request_data(
                         data=schemas[schema]['properties'][prop], name=prop))
 
         schemas_list.append(
@@ -53,7 +53,7 @@ def get_schemas_names(schemas: dict) -> list[str]:
     return schemas_names
 
 
-def get_schema_properties(schema: OpenApiSchema) -> list[OpenApiProprety]:
+def get_schema_properties(schema: OpenApiSchema) -> list[OpenApiProperty]:
     '''Get schema properties from OpenAPI data'''
     properties = schema.properties
 
