@@ -15,8 +15,9 @@ args = parser.parse_args()
 schemas = openapi.get_schemas(openapi.request_openapi_data(
     args.api))
 
-to_typescript.ts_mkdir()
 props_with_refs = {}
+schema_classes = []
+to_typescript.ts_mkdir()
 
 for schema in schemas:
     schema_properties = openapi.get_schema_properties(schema)
@@ -35,7 +36,10 @@ for schema in schemas:
             props_with_refs[schema.title].append(props[-1])
 
     schema_class = Schema(name=schema.title, properties=props)
-    # TODO: Strategy pattern to choose the output language based on the args.output
+    schema_classes.append(schema_class)
+
+
+for schema_class in schema_classes:
     if args.output == 'ts':
         interface = to_typescript.convert_to_ts_interface(schema_class)
         to_typescript.write_ts_interface(interface, schema_class.name)
