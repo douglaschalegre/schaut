@@ -1,8 +1,9 @@
 '''Transforming OPENAPI Schemas to Interfaces'''
 import argparse
-from schemas import Property, Schema
 import openapi
-import to_typescript
+import writter
+from stratergy import TypescriptStrategy, strategy_factory
+from schemas import Property, Schema
 
 parser = argparse.ArgumentParser("simple_example")
 parser.add_argument(
@@ -12,12 +13,13 @@ parser.add_argument(
 
 args = parser.parse_args()
 
+STRATERGY = strategy_factory(args.output)
+
 schemas = openapi.get_schemas(openapi.request_openapi_data(
     args.api))
 
 props_with_refs = {}
 schema_classes = []
-to_typescript.ts_mkdir()
 
 for schema in schemas:
     schema_properties = openapi.get_schema_properties(schema)
@@ -38,14 +40,8 @@ for schema in schemas:
     schema_class = Schema(name=schema.title, properties=props)
     schema_classes.append(schema_class)
 
-
-for schema_class in schema_classes:
-    if args.output == 'ts':
-        interface = to_typescript.convert_to_ts_interface(schema_class)
-        to_typescript.write_ts_interface(interface, schema_class.name)
-
-if args.output == 'ts':
-    for name, refs in props_with_refs.items():
-        interface = to_typescript.update_interface_with_refs(
-            name=name, props_with_refs=refs)
-        to_typescript.write_ts_interface(interface, name)
+writter.create_files(
+    schema_classes=schema_classes,
+    props_with_refs=props_with_refs,
+    strategy=TypescriptStrategy()
+)

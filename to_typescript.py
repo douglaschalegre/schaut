@@ -75,9 +75,3 @@ def update_interface_with_refs(name: str, props_with_refs: list[Property]) -> li
 
     new_interface.insert(number_of_imports, '')
     return new_interface
-
-
-def ts_mkdir() -> None:
-    '''Creates the ts-interfaces folder'''
-    if not os.path.exists('ts-interfaces'):
-        os.mkdir('ts-interfaces')
