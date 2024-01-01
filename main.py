@@ -43,5 +43,5 @@ for schema in schemas:
 writter.create_files(
     schema_classes=schema_classes,
     props_with_refs=props_with_refs,
-    strategy=TypescriptStrategy()
+    strategy=STRATERGY
 )
