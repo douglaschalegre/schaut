@@ -2,7 +2,7 @@
 import argparse
 import openapi
 import writter
-from stratergy import TypescriptStrategy, strategy_factory
+from stratergy import strategy_factory
 from schemas import Property, Schema
 
 parser = argparse.ArgumentParser("simple_example")
@@ -24,7 +24,6 @@ schema_classes = []
 for schema in schemas:
     schema_properties = openapi.get_schema_properties(schema)
     schema_required_properties = openapi.get_required_properties(schema)
-
     props: list[Property] = []
     for prop in schema_properties:
         props.append(Property.from_openapi_proprety(
